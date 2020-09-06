@@ -271,6 +271,8 @@ year={year}&month={month}".format(
     if category == "jjcc":
         result = {"code": [], "name": [], "ratio": [], "share": [], "value": []}
         for l in main:
+            if l[iratio][0] == '-':
+                continue
             result["code"].append(l[icode])
             result["name"].append(l[iname])
             result["ratio"].append(float(l[iratio][:-1]))
@@ -993,7 +995,7 @@ class fundinfo(basicinfo):
         import xalpha.universal as xu
 
         df = xu.get_daily("pt-F" + self.code, end=date)
-        if df is not None:
+        if df is not None and len(df) > 0:
             d = dict(df.iloc[-1])
             del d["assets"], d["date"]
             return d

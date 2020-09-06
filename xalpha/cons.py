@@ -429,8 +429,8 @@ def _float(n):
             n = float(n[:-1]) * 1000 * 1000
         elif n.endswith("G") or n.endswith("g") or n.endswith("B") or n.endswith("b"):
             n = float(n[:-1]) * 1000 * 1000 * 1000
-        elif n == "-":
-            return 0
+        elif n[0] == "-":
+            return 0.0
     except AttributeError:
         pass
     if not n:

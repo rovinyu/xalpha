@@ -455,15 +455,19 @@ def get_portfolio_fromttjj(code, start=None, end=None):
     r = rget("http://fundf10.eastmoney.com/zcpz_{code}.html".format(code=code))
     s = BeautifulSoup(r.text, "lxml")
     table = s.find("table", class_="tzxq")
-    df = pd.read_html(str(table))[0]
-    df["date"] = pd.to_datetime(df["报告期"])
-    df["stock_ratio"] = df["股票占净比"].replace("---", "0%").apply(lambda s: _float(s[:-1]))
-    df["bond_ratio"] = df["债券占净比"].replace("---", "0%").apply(lambda s: _float(s[:-1]))
-    df["cash_ratio"] = df["现金占净比"].replace("---", "0%").apply(lambda s: _float(s[:-1]))
-    #     df["dr_ratio"] = df["存托凭证占净比"].replace("---", "0%").apply(lambda s: xa.cons._float(s[:-1]))
-    df["assets"] = df["净资产（亿元）"]
-    df = df[::-1]
-    return df[["date", "stock_ratio", "bond_ratio", "cash_ratio", "assets"]]
+    if table is not None:
+        df = pd.read_html(str(table))[0]
+        df["date"] = pd.to_datetime(df["报告期"])
+        df["stock_ratio"] = df["股票占净比"].replace("---", "0%").apply(lambda s: _float(s[:-1]))
+        df["bond_ratio"] = df["债券占净比"].replace("---", "0%").apply(lambda s: _float(s[:-1]))
+        df["cash_ratio"] = df["现金占净比"].replace("---", "0%").apply(lambda s: _float(s[:-1]))
+        #     df["dr_ratio"] = df["存托凭证占净比"].replace("---", "0%").apply(lambda s: xa.cons._float(s[:-1]))
+        df["assets"] = df["净资产（亿元）"]
+        df = df[::-1]
+        return df[["date", "stock_ratio", "bond_ratio", "cash_ratio", "assets"]]
+    else:
+        df = pd.DataFrame()
+        return df
 
 
 # this is the most elegant approach to dispatch get_daily, the definition can be such simple
